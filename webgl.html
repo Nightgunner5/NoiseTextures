@@ -82,7 +82,7 @@ float getUp(vec2 coord) {
 
 vec4 dirt(vec2 coord) {
 	float tone = clamp(snoise(coord / 2.0) * 40.0
-						* mix(getUp(coord), 0.1, snoise(coord / 16.0))
+						* mix(getUp(coord), 0.1, clamp(snoise(coord / 16.0) + 1.2, 0.0, 1.0))
 						+ 120.0, 0.0, 255.0) / 255.0;
 
 	return vec4(vec3(194.0 / 255.0, 160.0 / 255.0, 100.0 / 255.0) * tone, 1.0);
@@ -92,7 +92,7 @@ vec4 tile(vec2 coord) {
 	const vec2 seedColor = vec2(-54305.40514, -4513251.045463);
 	const vec2 seedDirty = vec2(-465584.05754, 2451.054527484);
 
-	const float TILE_SIZE = 1.0;
+	const float TILE_SIZE = 128.0;
 
 	float initial = clamp((snoise(floor(coord / TILE_SIZE) + seedColor) / 2.0
 				+ snoise(coord / 16.0) / 24.0) * 64.0 + 128.0, 0.0, 255.0);
@@ -108,10 +108,11 @@ vec4 tile(vec2 coord) {
 }
 
 void main(void) {
+	vec2 coord = (texCoord + uTexOffset) * 64.0;
 	if (uTextureType == 0) {
-		gl_FragColor = tile(texCoord + uTexOffset);
+		gl_FragColor = tile(coord);
 	} else if (uTextureType == 1) {
-		gl_FragColor = dirt(texCoord + uTexOffset);
+		gl_FragColor = dirt(coord / 16.0);
 	} else {
 		gl_FragColor = vec4(1.0);
 	}

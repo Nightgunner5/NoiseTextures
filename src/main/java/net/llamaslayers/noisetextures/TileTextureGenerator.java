@@ -32,7 +32,7 @@ public class TileTextureGenerator extends AbstractTextureGenerator {
 
 		int distance = (int) Math.min(Math.min(Math.min(TILE_SIZE - mod(x, TILE_SIZE), mod(x, TILE_SIZE)),
 											   Math.min(TILE_SIZE - mod(y, TILE_SIZE), mod(y, TILE_SIZE))), TILE_SIZE / 4);
-		return (byte) Math.min(Math.max(distance + initial
+		return (byte) Math.min(Math.max(distance * 128.0 / TILE_SIZE + initial
 				+ dirt.noise(x, y, 0.5, 0.5, true) * 8, 0), 255);
 	}
 
@@ -64,7 +64,7 @@ public class TileTextureGenerator extends AbstractTextureGenerator {
 						int tone = b[((i * step + xStep) * width + j) * step + yStep] < 0
 								? b[((i * step + xStep) * width + j) * step + yStep] + 256
 								: b[((i * step + xStep) * width + j) * step + yStep];
-						b[((i * step + xStep) * width + j) * step + yStep] = (byte) Math.min(Math.max(distance + tone
+						b[((i * step + xStep) * width + j) * step + yStep] = (byte) Math.min(Math.max(distance * 128.0 / TILE_SIZE + tone
 								+ dirt.noise(x + i + xStep / (double) step, y + j + yStep / (double) step, 0.5, 0.5, true) * 8, 0), 255);
 					}
 				}
